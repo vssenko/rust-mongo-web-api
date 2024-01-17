@@ -31,7 +31,7 @@ async fn create_post(state: web::Data<AppState>) -> impl Responder {
 }
 
 pub fn scope() -> Scope {
-    let scope = web::scope("/status")
+    let scope = web::scope("/posts")
         .service(get_all_posts)
         .service(create_post);
 
