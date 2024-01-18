@@ -1,14 +1,10 @@
+use mongodb::bson;
 use serde::{Deserialize, Serialize};
-use wither::{
-    bson::{oid::ObjectId, DateTime},
-    Model,
-};
 
-#[derive(Debug, Model, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Post {
-    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
-    title: String,
-    content: String,
-    date: DateTime,
+    #[serde(serialize_with = "bson::serde_helpers::serialize_object_id_as_hex_string")]
+    pub _id: bson::oid::ObjectId,
+    pub title: String,
+    pub content: String,
 }

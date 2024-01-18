@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use wither::mongodb::Database;
+use crate::models::Database;
 
 #[derive(Debug)]
 pub struct UserService {

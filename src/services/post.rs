@@ -1,26 +1,76 @@
-use std::rc::Rc;
+use std::{rc::Rc, str::FromStr};
 
-use wither::mongodb::Database;
+use futures::{TryFutureExt, TryStreamExt};
+use mongodb::{
+    bson::{doc, oid::ObjectId, uuid},
+    results::InsertOneResult,
+    Collection,
+};
+use serde::Deserialize;
+
+use crate::models::{post, Database, DbError, Post};
 
 #[derive(Debug)]
+#[allow(unused)]
 pub struct PostService {
     db: Rc<Database>,
+
+    collection: Collection<Post>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CreatePostData {
+    pub title: String,
+    pub content: String,
 }
 
 impl PostService {
-    pub async fn create(&self) {
-        dbg!("Post: create");
+    pub async fn create(
+        &self,
+        post_data: CreatePostData,
+    ) -> Result<InsertOneResult, mongodb::error::Error> {
+        self.collection
+            .insert_one(
+                Post {
+                    _id: ObjectId::new(),
+                    title: post_data.title,
+                    content: post_data.content,
+                },
+                None,
+            )
+            .await
     }
 
-    pub async fn list(&self) {
-        dbg!("Post: list");
+    pub async fn list(&self) -> Result<Vec<Post>, DbError> {
+        let result = self.collection.find(None, None).await;
+
+        if result.is_err() {
+            return Err(result.unwrap_err());
+        }
+
+        let result = result.unwrap();
+
+        let posts: Vec<Post> = result.try_collect().unwrap_or_else(|e| vec![]).await;
+
+        Ok(posts)
     }
 
-    pub async fn get_by_id(&self) {
-        dbg!("Post: get_by_id");
+    pub async fn get_by_id(&self, id: &str) -> Option<Post> {
+        let id = ObjectId::parse_str(id);
+
+        let Ok(oid) = id else { return None };
+
+        let filter = doc! { "_id": oid };
+        dbg!(&filter);
+        let result = self.collection.find_one(filter, None).await;
+
+        dbg!(&result);
+
+        return result.unwrap_or_else(|_e| None);
     }
 
     pub fn new(db: Rc<Database>) -> Self {
-        PostService { db }
+        let collection = db.collection::<Post>("posts");
+        PostService { db, collection }
     }
 }

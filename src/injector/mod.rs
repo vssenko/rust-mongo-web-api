@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use wither::mongodb::Database;
+use mongodb::Database;
 
 use crate::models;
 use crate::services;
@@ -20,6 +20,7 @@ pub async fn new() -> Injector {
 
 // fields on injector are used to store "singleton" services
 #[derive(Debug)]
+#[allow(unused)]
 pub struct Injector {
     single_db: Rc<Database>,
     single_user_service: Rc<services::user::UserService>,
