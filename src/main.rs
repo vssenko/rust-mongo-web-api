@@ -4,6 +4,7 @@ mod injector;
 mod models;
 mod routes;
 mod services;
+mod utils;
 use actix_web::{App, HttpServer};
 pub use app_state::AppState;
 
@@ -18,6 +19,7 @@ async fn main() -> std::io::Result<()> {
                 Ok::<_, AppState>(app_state)
             })
             .service(routes::status::scope())
+            .service(routes::users::scope())
             .service(routes::posts::scope())
     })
     .bind(("127.0.0.1", config::get().api.port))?

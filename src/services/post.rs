@@ -1,14 +1,14 @@
-use std::{rc::Rc, str::FromStr};
+use std::rc::Rc;
 
 use futures::{TryFutureExt, TryStreamExt};
 use mongodb::{
-    bson::{doc, oid::ObjectId, uuid},
+    bson::{doc, oid::ObjectId},
     results::InsertOneResult,
     Collection,
 };
 use serde::Deserialize;
 
-use crate::models::{post, Database, DbError, Post};
+use crate::models::{Database, DbError, Post};
 
 #[derive(Debug)]
 #[allow(unused)]
@@ -32,7 +32,7 @@ impl PostService {
         self.collection
             .insert_one(
                 Post {
-                    _id: ObjectId::new(),
+                    _id: ObjectId::new().to_hex(),
                     title: post_data.title,
                     content: post_data.content,
                 },
@@ -50,21 +50,14 @@ impl PostService {
 
         let result = result.unwrap();
 
-        let posts: Vec<Post> = result.try_collect().unwrap_or_else(|e| vec![]).await;
+        let posts: Vec<Post> = result.try_collect().unwrap_or_else(|_e| vec![]).await;
 
         Ok(posts)
     }
 
     pub async fn get_by_id(&self, id: &str) -> Option<Post> {
-        let id = ObjectId::parse_str(id);
-
-        let Ok(oid) = id else { return None };
-
-        let filter = doc! { "_id": oid };
-        dbg!(&filter);
+        let filter = doc! { "_id": id };
         let result = self.collection.find_one(filter, None).await;
-
-        dbg!(&result);
 
         return result.unwrap_or_else(|_e| None);
     }

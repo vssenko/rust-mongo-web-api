@@ -22,6 +22,8 @@ pub fn get() -> &'static Config {
                     Ok(port) => port.parse::<u16>().unwrap(),
                     Err(_) => 3000,
                 },
+                jwt_secret: std::env::var("JWT_SECRET")
+                    .unwrap_or_else(|_e| "dontusedefaultkeys".to_string()),
             },
         }
     })

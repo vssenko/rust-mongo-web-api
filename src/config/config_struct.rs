@@ -8,6 +8,7 @@ pub struct MongoConfig {
 #[derive(Debug)]
 pub struct ApiConfig {
     pub port: u16,
+    pub jwt_secret: String,
 }
 
 #[derive(Debug)]
