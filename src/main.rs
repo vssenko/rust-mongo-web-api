@@ -10,7 +10,9 @@ pub use app_state::AppState;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let workers_count = config::get().api.thread_count;
+
+    let mut server = HttpServer::new(|| {
         App::new()
             .data_factory(|| async {
                 let injector = injector::new().await;
@@ -21,8 +23,14 @@ async fn main() -> std::io::Result<()> {
             .service(routes::status::scope())
             .service(routes::users::scope())
             .service(routes::posts::scope())
-    })
-    .bind(("127.0.0.1", config::get().api.port))?
-    .run()
-    .await
+    });
+
+    if workers_count.is_some() {
+        server = server.workers(workers_count.unwrap());
+    }
+
+    server
+        .bind(("127.0.0.1", config::get().api.port))?
+        .run()
+        .await
 }

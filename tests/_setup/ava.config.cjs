@@ -13,7 +13,7 @@ module.exports = {
     NODE_ENV: 'test',
     ENV: 'test',
   },
-  timeout: '30s',
+  timeout: '60s',
   concurrency: 3,
   nodeArguments: [],
 };

@@ -1,7 +1,6 @@
 use super::UserService;
 use crate::models::User;
 use crate::{config, models::user::Role, utils::errors};
-use actix_web::cookie::time::Duration;
 use actix_web::HttpRequest;
 use jsonwebtoken::{
     decode, encode, errors::Error, Algorithm, DecodingKey, EncodingKey, Header, Validation,

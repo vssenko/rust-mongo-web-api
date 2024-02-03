@@ -6,6 +6,7 @@
   "scripts": {
     "build": "cargo build",
     "start": "cargo run",
+    "test:prepare": "ts-node ./tests/_scripts/prepare.ts",
     "test": "ava  --config tests/_setup/ava.config.cjs"
   },
   "repository": {

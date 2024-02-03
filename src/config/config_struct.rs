@@ -9,6 +9,7 @@ pub struct MongoConfig {
 pub struct ApiConfig {
     pub port: u16,
     pub jwt_secret: String,
+    pub thread_count: Option<usize>,
 }
 
 #[derive(Debug)]

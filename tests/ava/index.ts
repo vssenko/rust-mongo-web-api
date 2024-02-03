@@ -10,9 +10,9 @@ export type GetApiFunction = (params?: GetApiParams) => AxiosInstance;
 
 export interface TestContext {
   mongodb: MongoMemoryServer,
-  httpServer: Server,
   serverUrl: string,
   api: typeof getApi,
+  stopApi: () => void,
   helpers: typeof testHelpers,
   [x: string | number | symbol]: any;
 }

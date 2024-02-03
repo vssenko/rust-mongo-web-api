@@ -1,12 +1,44 @@
 import axios from 'axios';
-import http from 'http';
+import cp from 'child_process';
+//import { getFreePort } from '../utils'
 
+const secondsToWaitAfterStart = 3;
 
-let httpServer: http.Server;
+let apiProcess: cp.ChildProcessWithoutNullStreams | null = null;
 let serverUrl: string;
 
-export async function startApi() {
-  throw new Error('Not implemented');
+interface StartApiParams {
+  mongourl: string
+}
+
+export async function startApi(params: StartApiParams) {
+  const port = 3252//await getFreePort();
+
+  apiProcess = cp.spawn(`cargo run`, [], {
+    cwd: process.cwd(),
+    shell: true,
+    env: {
+      MONGODB_URI: params.mongourl,
+      PORT: port.toString(),
+      THREAD_COUNT: '2'
+    },
+  });
+
+  await new Promise(r => setTimeout(r, secondsToWaitAfterStart * 1000));
+
+  serverUrl = `http://127.0.0.1:${port}`;
+
+  return {
+    serverUrl
+  };
+}
+
+export async function stopApi() {
+  if (!apiProcess) return;
+  apiProcess.stdout.destroy()
+  apiProcess.stdin.destroy()
+  apiProcess.stderr.destroy()
+  apiProcess.kill();
 }
 
 export interface GetApiParams {
@@ -14,7 +46,9 @@ export interface GetApiParams {
 }
 
 export function getApi({ simplifyErrors = true }: GetApiParams = {}) {
-  const axiosInstance = axios.create();
+  const axiosInstance = axios.create({
+    baseURL: serverUrl
+  });
 
 
   return axiosInstance;
@@ -22,5 +56,6 @@ export function getApi({ simplifyErrors = true }: GetApiParams = {}) {
 
 export default {
   startApi,
+  stopApi,
   getApi
 };

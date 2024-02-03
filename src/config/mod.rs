@@ -24,6 +24,13 @@ pub fn get() -> &'static Config {
                 },
                 jwt_secret: std::env::var("JWT_SECRET")
                     .unwrap_or_else(|_e| "dontusedefaultkeys".to_string()),
+                thread_count: match std::env::var("THREAD_COUNT") {
+                    Ok(count) => match count.parse::<usize>() {
+                        Ok(count) => Some(count),
+                        Err(_) => None,
+                    },
+                    Err(_) => None,
+                },
             },
         }
     })
