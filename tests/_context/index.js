@@ -1,9 +1,7 @@
 import { getApi } from "./api.js";
 import { bootstrap, shutdown } from "./bootstrap.js";
 
-export async function createUser({ email, password } = {}) {
-  throw new Error("Not implemented");
-}
+export * from "./helpers/user.js";
 
 export default {
   api: getApi,

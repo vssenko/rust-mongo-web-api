@@ -15,6 +15,15 @@ test.describe("/users", () => {
     password = "password123";
   });
 
+  test.it("/login should fail for not existing user", async () => {
+    await assert.rejects(async () =>
+      context.api().post("/users/login", {
+        email,
+        password,
+      }),
+    );
+  });
+
   test.it("/register should create user", async () => {
     const result = await context.api().post("/users/register", {
       email,
@@ -37,5 +46,15 @@ test.describe("/users", () => {
     const result = await context.api({ token }).get("/users/me");
 
     assert.equal(result.data.email, email);
+  });
+
+  test.it("/login should login for existing user", async () => {
+    const result = await context.api().post("/users/login", {
+      email,
+      password,
+    });
+
+    assert.ok(result.data.token);
+    assert.equal(result.data.user.email, email);
   });
 });
