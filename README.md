@@ -1,4 +1,5 @@
 # rust-mongo-web-api
+
 Sample (and subjective) project structure for Rust web api with MongoDb connection.
 Created with intention to recreate (imho) graceful structure of good-written NodeJS server.
 
@@ -8,12 +9,12 @@ Created with intention to recreate (imho) graceful structure of good-written Nod
 
 2. Middleware. Usually, when writing NodeJS apps, you want to add some authorization middleware, which will check headers and (optionally but usually yes) load User somewhere in request (req.user). With actix_web I found it surprisingly challeging to setup authorization middleware and adding it to specific routes(handlers). Instead, I found much easier to manually call `state.i.auth_service().get_user_from_req(&req)`.
 
-3. Mongo driver. Generally, serde+mongodb crates gives you ability to easily create simple structs. However, the very first implementation faced an issue with ObjectId (_id) field (de)serialization. There is mongodb serde helper to mimic plain hex value, but this helper does not support optional ids. And as a result, it writes _id as string, which is not something great. To simplify that, i just decided to explicitly use string _id type.
+3. Mongo driver. Generally, serde+mongodb crates gives you ability to easily create simple structs. However, the very first implementation faced an issue with ObjectId (\_id) field (de)serialization. There is mongodb serde helper to mimic plain hex value, but this helper does not support optional ids. And as a result, it writes \_id as string, which is not something great. To simplify that, i just decided to explicitly use string \_id type.
 
 4. Config. To make it easier to get config from different parts of application, i've designed Config mod to contain singleton config value. In very secure Rust world it was surprisingly pleasant to create such antipattern as singleton using `OnceLock`.
 
 5. Tests TBD.
 
-
 ## Conclusion
+
 Well, of course it's not that fast app development as in NodeJS, but this is Rust! And considering Rust a low-level performant programming language, it can still relatively easy be used to write business logic, and this is awesome.

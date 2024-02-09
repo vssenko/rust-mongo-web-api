@@ -23,6 +23,7 @@
   "devDependencies": {
     "axios": "^1.6.7",
     "lodash": "^4.17.21",
-    "mongodb-memory-server": "^9.1.6"
+    "mongodb-memory-server": "^9.1.6",
+    "prettier": "3.2.5"
   }
 }
