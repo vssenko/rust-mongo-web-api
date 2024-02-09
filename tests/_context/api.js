@@ -37,7 +37,7 @@ class AxiosSimpleError extends Error {
 
 export async function startApi({ mongourl, port }) {
   apiProcess = await spawn({
-    command: `cargo run`,
+    command: `cargo run --quiet`,
     args: [],
     options: {
       cwd: process.cwd(),

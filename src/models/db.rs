@@ -8,6 +8,8 @@ pub async fn connect() -> Database {
 
     let client = Client::with_uri_str(&config.mongodb.url).await.unwrap();
 
+    client.list_database_names(None, None).await.unwrap();
+
     println!(
         "db: connected. Setting database name as \"{}\"",
         config.mongodb.db_name

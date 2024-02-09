@@ -17,6 +17,8 @@ export async function spawn({
   waitForOutput,
   timeoutSeconds = 20,
 }) {
+  console.log(`spawn: ${command}`);
+
   const childProcess = cp.spawn(command, args, options);
 
   let logs = "";
