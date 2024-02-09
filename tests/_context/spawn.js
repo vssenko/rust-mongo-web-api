@@ -14,7 +14,8 @@ export async function spawn({
   args,
   options,
   waitForSeconds,
-  waitForOutput
+  waitForOutput,
+  timeoutSeconds = 20
 }) {
   const childProcess = cp.spawn(command, args, options);
 
@@ -27,6 +28,8 @@ export async function spawn({
 
   childProcess.stderr.on('data', (data) => console.error(data.toString()));
 
+  const start = Date.now();
+
   await new Promise(resolve => {
     if (waitForSeconds) {
       return setTimeout(resolve, waitForSeconds * 1000);
@@ -36,7 +39,12 @@ export async function spawn({
       const intervalHandler = setInterval(() => {
         if (logs.includes(waitForOutput)) {
           clearInterval(intervalHandler);
-          resolve();
+          return resolve();
+        }
+
+        if (Date.now() > start + timeoutSeconds * 1000) {
+          clearInterval(intervalHandler);
+          return reject(new Error('spawn: Timeout.'));
         }
       }, 100);
       return;

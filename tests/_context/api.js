@@ -38,7 +38,7 @@ export async function startApi({ mongourl, port }) {
         THREAD_COUNT: '2'
       },
     },
-    waitForSeconds: 2
+    waitForOutput: 'db: connected.'
   });
   
   await new Promise(r => setTimeout(r, secondsToWaitAfterStart * 1000));
