@@ -8,10 +8,13 @@ use crate::services;
 pub async fn new() -> Injector {
     let db = models::db::connect().await;
     let db_rc = Rc::new(db.clone());
-    let user_service = Rc::new(services::UserService::new(Rc::clone(&db_rc)));
-    let post_service = Rc::new(services::PostService::new(Rc::clone(&db_rc)));
+    let auth_service = Rc::new(services::AuthService::new());
 
-    let auth_service = Rc::new(services::AuthService::new(Rc::clone(&user_service)));
+    let user_service = Rc::new(services::UserService::new(
+        Rc::clone(&db_rc),
+        auth_service.clone(),
+    ));
+    let post_service = Rc::new(services::PostService::new(Rc::clone(&db_rc)));
 
     Injector {
         single_db: Rc::clone(&db_rc),

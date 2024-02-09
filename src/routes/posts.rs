@@ -1,4 +1,4 @@
-use actix_web::{get, post, web, HttpResponse, Responder, Scope};
+use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder, Scope};
 
 use crate::{services::post::CreatePostData, AppState};
 
@@ -20,10 +20,21 @@ async fn get_post_by_id(state: web::Data<AppState>, path: web::Path<String>) -> 
 
 #[post("")]
 async fn create_post(
+    req: HttpRequest,
     state: web::Data<AppState>,
     post_data: web::Json<CreatePostData>,
 ) -> impl Responder {
-    let result = state.i.post_service().create(post_data.into_inner()).await;
+    let user = state.i.user_service().get_user_from_req(&req).await;
+
+    let Ok(user) = user else {
+        return state.format_err(user.unwrap_err());
+    };
+
+    let result = state
+        .i
+        .post_service()
+        .create(post_data.into_inner(), &user._id)
+        .await;
     match result {
         Ok(insert_info) => return HttpResponse::Ok().json(insert_info),
         _ => return HttpResponse::InternalServerError().finish(),

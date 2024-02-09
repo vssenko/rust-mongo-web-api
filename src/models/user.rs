@@ -22,3 +22,10 @@ pub struct User {
     pub role: Role,
     pub email: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UserAuth {
+    pub _id: String,
+    pub user_id: String,
+    pub password_hash: String,
+}

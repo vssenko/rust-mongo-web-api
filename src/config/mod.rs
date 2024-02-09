@@ -31,6 +31,8 @@ pub fn get() -> &'static Config {
                     },
                     Err(_) => None,
                 },
+                hash_salt: std::env::var("HASH_SALT")
+                    .unwrap_or_else(|_e| "dontusedefaultsalt".to_string()),
             },
         }
     })

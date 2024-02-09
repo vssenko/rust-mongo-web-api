@@ -12,7 +12,7 @@ use crate::{
 async fn get_all_users(req: HttpRequest, state: web::Data<AppState>) -> impl Responder {
     let check_role_result = state
         .i
-        .auth_service()
+        .user_service()
         .get_user_from_req_with_role(&req, Role::Admin)
         .await;
 
@@ -36,7 +36,7 @@ async fn get_user_by_id(
 ) -> impl Responder {
     let check_role_result = state
         .i
-        .auth_service()
+        .user_service()
         .get_user_from_req_with_role(&req, Role::Admin)
         .await;
 
@@ -50,10 +50,8 @@ async fn get_user_by_id(
 
 #[get("/me")]
 async fn get_me(req: HttpRequest, state: web::Data<AppState>) -> impl Responder {
-    dbg!("HERE");
-    let user = state.i.auth_service().get_user_from_req(&req).await;
+    let user = state.i.user_service().get_user_from_req(&req).await;
 
-    dbg!(&user);
     if user.is_err() {
         return state.format_err(user.unwrap_err());
     }
@@ -67,7 +65,7 @@ struct CreateUserResponse {
     token: String,
 }
 
-#[post("")]
+#[post("/register")]
 async fn create_user(
     state: web::Data<AppState>,
     user_data: web::Json<CreateUserData>,
@@ -91,7 +89,6 @@ async fn create_user(
     });
 }
 
-// For very simplicity we omit password at all, just log in by providing email
 #[post("/login")]
 async fn login_user(
     state: web::Data<AppState>,

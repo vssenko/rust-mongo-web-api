@@ -2,12 +2,12 @@
   "name": "rust-mongo-web-api",
   "version": "1.0.0",
   "description": "Sample (and subjective) project structure for Rust web api with MongoDb connection. Created with intention to recreate (imho) graceful structure of good-written NodeJS server.",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "cargo build",
     "start": "cargo run",
-    "test:prepare": "ts-node ./tests/_scripts/prepare.ts",
-    "test": "ava  --config tests/_setup/ava.config.cjs"
+    "test:prepare": "node ./tests/_scripts/prepare.ts",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",
@@ -21,10 +21,8 @@
   },
   "homepage": "https://github.com/vssenko/rust-mongo-web-api#readme",
   "devDependencies": {
-    "ava": "^6.1.1",
     "axios": "^1.6.7",
-    "mongodb-memory-server": "^9.1.6",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "lodash": "^4.17.21",
+    "mongodb-memory-server": "^9.1.6"
   }
 }

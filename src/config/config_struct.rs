@@ -10,6 +10,7 @@ pub struct ApiConfig {
     pub port: u16,
     pub jwt_secret: String,
     pub thread_count: Option<usize>,
+    pub hash_salt: String,
 }
 
 #[derive(Debug)]

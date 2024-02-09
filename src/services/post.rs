@@ -28,6 +28,7 @@ impl PostService {
     pub async fn create(
         &self,
         post_data: CreatePostData,
+        user_id: &str,
     ) -> Result<InsertOneResult, mongodb::error::Error> {
         self.collection
             .insert_one(
@@ -35,6 +36,7 @@ impl PostService {
                     _id: ObjectId::new().to_hex(),
                     title: post_data.title,
                     content: post_data.content,
+                    user_id: user_id.to_string(),
                 },
                 None,
             )
