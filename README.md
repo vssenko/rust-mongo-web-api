@@ -2,6 +2,7 @@
 
 Sample (and subjective) project structure for Rust web api with MongoDb connection.
 Created with intention to recreate (imho) graceful structure of good-written NodeJS server.
+To increase development speed and ease of test coverage, integration tests are written with Node test runner.
 
 ## Thoughts
 
@@ -13,7 +14,7 @@ Created with intention to recreate (imho) graceful structure of good-written Nod
 
 4. Config. To make it easier to get config from different parts of application, i've designed Config mod to contain singleton config value. In very secure Rust world it was surprisingly pleasant to create such antipattern as singleton using `OnceLock`.
 
-5. Tests TBD.
+5. With lack of actix_web graceful integration tests (the only thing in documentation I found was about recreating new App and adding some routes), I've decided to spin Rust app from Nodejs and use Nodejs with in-memory Mongo to create graceful full-featured tests.
 
 ## Conclusion
 
