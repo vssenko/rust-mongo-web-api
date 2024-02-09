@@ -20,7 +20,7 @@ async fn get_all_users(req: HttpRequest, state: web::Data<AppState>) -> impl Res
         return state.format_err(check_role_result.unwrap_err());
     }
 
-    let result = state.i.post_service().list().await;
+    let result = state.i.user_service().list().await;
 
     match result {
         Ok(posts) => return HttpResponse::Ok().json(posts),

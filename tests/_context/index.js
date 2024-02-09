@@ -1,13 +1,12 @@
 import { getApi } from "./api.js";
 import { bootstrap, shutdown } from "./bootstrap.js";
-
-export * from "./helpers/user.js";
+import user from "./helpers/user.js";
+import test from "./addtionalTesters.js";
 
 export default {
   api: getApi,
   bootstrap,
   shutdown,
-  user: {
-    createUser,
-  },
+  user,
+  test,
 };

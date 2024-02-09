@@ -3,7 +3,6 @@ use std::rc::Rc;
 use futures::{TryFutureExt, TryStreamExt};
 use mongodb::{
     bson::{doc, oid::ObjectId},
-    results::InsertOneResult,
     Collection,
 };
 use serde::Deserialize;
@@ -29,8 +28,9 @@ impl PostService {
         &self,
         post_data: CreatePostData,
         user_id: &str,
-    ) -> Result<InsertOneResult, mongodb::error::Error> {
-        self.collection
+    ) -> Result<Post, mongodb::error::Error> {
+        let insert_result = self
+            .collection
             .insert_one(
                 Post {
                     _id: ObjectId::new().to_hex(),
@@ -40,7 +40,29 @@ impl PostService {
                 },
                 None,
             )
-            .await
+            .await;
+
+        if insert_result.is_err() {
+            return Err(insert_result.unwrap_err());
+        }
+
+        let insert_result = insert_result.unwrap();
+
+        let post = self
+            .collection
+            .find_one(
+                doc! {
+                    "_id": insert_result.inserted_id
+                },
+                None,
+            )
+            .await;
+
+        if post.is_err() {
+            return Err(post.unwrap_err());
+        }
+
+        return Ok(post.unwrap().unwrap());
     }
 
     pub async fn list(&self) -> Result<Vec<Post>, DbError> {
