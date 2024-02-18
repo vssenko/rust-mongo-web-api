@@ -7,7 +7,7 @@
     "build": "cargo build",
     "start": "cargo run",
     "test:prepare": "node ./tests/_scripts/prepare.ts",
-    "test": "node --test",
+    "test": "npm run build && node --test",
     "format:js": "npx prettier . --write",
     "format:rust": "cargo fix --allow-dirty"
   },

@@ -34,5 +34,9 @@ test.describe("/posts", () => {
     assert.ok(result.data._id);
     assert.equal(result.data.title, "Some title");
     assert.equal(result.data.user_id, registerData.user._id);
+
+    const getAllResult = await context.api().get("/posts");
+    assert.deepEqual(getAllResult.data.length, 1);
+    assert.deepEqual(getAllResult.data[0]._id, result.data._id);
   });
 });
