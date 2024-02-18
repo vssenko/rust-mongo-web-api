@@ -11,7 +11,7 @@ Rust | Actix Web | MongoDb | Integration tests | Node Test Runner | In-memory Mo
   - [Db Connection & Dependency Injection](#db-connection--dependency-injection)
   - [MongoDb models](#mongodb-models)
   - [Middleware?](#middleware)
-- [Part two: Node Test Runner(#part-two-node-test-runner)
+- [Part two: Node Test Runner](#part-two-node-test-runner)
   - [Choosing test framework](#choosing-test-framework)
   - [Tests context](#tests-context)
   - [Bootstap](#bootstap)
